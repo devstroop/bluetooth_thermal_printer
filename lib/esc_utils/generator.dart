@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:typed_data' show Uint8List;
+import 'package:flutter/services.dart';
 import 'package:hex/hex.dart';
 import 'package:image/image.dart';
 import 'package:gbk_codec/gbk_codec.dart';
@@ -10,6 +11,7 @@ import 'commands.dart';
 import 'pos_column.dart';
 import 'pos_styles.dart';
 import 'qrcode.dart';
+import 'dart:typed_data';
 
 class Generator {
   Generator(this._paperSize, this._profile, {this.spaceBetweenRows = 5});
@@ -132,6 +134,7 @@ class Generator {
   ///
   /// [image] Image to extract from
   /// [lineHeight] Printed line height in dots
+
   List<List<int>> _toColumnFormat(Image imgSrc, int lineHeight) {
     final Image image = Image.from(imgSrc); // make a copy
 
@@ -141,16 +144,18 @@ class Generator {
 
     // Create a black bottom layer
     final biggerImage = copyResize(image, width: widthPx, height: heightPx);
-    fill(biggerImage, 0);
+    fill(biggerImage, color: ColorInt16.rgb(0, 0, 0));
+
     // Insert source image into bigger one
-    drawImage(biggerImage, image, dstX: 0, dstY: 0);
+    compositeImage(biggerImage, image, dstX: 0, dstY: 0);
 
     int left = 0;
     final List<List<int>> blobs = [];
 
     while (left < widthPx) {
-      final Image slice = copyCrop(biggerImage, left, 0, lineHeight, heightPx);
-      final Uint8List bytes = slice.getBytes(format: Format.luminance);
+      final Image slice = copyCrop(biggerImage,
+          x: left, y: 0, width: lineHeight, height: heightPx);
+      final Uint8List bytes = slice.getBytes(order: ChannelOrder.rgb);
       blobs.add(bytes);
       left += lineHeight;
     }
@@ -169,7 +174,7 @@ class Generator {
 
     // R/G/B channels are same -> keep only one channel
     final List<int> oneChannelBytes = [];
-    final List<int> buffer = image.getBytes(format: Format.rgba);
+    final List<int> buffer = image.getBytes(order: ChannelOrder.rgba);
     for (int i = 0; i < buffer.length; i += 4) {
       oneChannelBytes.add(buffer[i]);
     }
@@ -573,8 +578,8 @@ class Generator {
     const bool highDensityVertical = true;
 
     invert(image);
-    flip(image, Flip.horizontal);
-    final Image imageRotated = copyRotate(image, 270);
+    flip(image, direction: FlipDirection.horizontal);
+    final Image imageRotated = copyRotate(image, angle: 270);
 
     const int lineHeight = highDensityVertical ? 3 : 1;
     final List<List<int>> blobs = _toColumnFormat(imageRotated, lineHeight * 8);
