@@ -542,7 +542,7 @@ class Generator {
         final List<String> lexemes = list[0];
         final List<bool> isLexemeChinese = list[1];
 
-        // Print each lexeme using codetable OR kanji
+        // Print each lexeme using code table OR kanji
         for (var j = 0; j < lexemes.length; ++j) {
           bytes += _text(
             _encode(lexemes[j], isKanji: isLexemeChinese[j]),
@@ -566,22 +566,22 @@ class Generator {
   }
 
   /// Print an image using (ESC *) command
-  ///
-  /// [image] is an instanse of class from [Image library](https://pub.dev/packages/image)
-  List<int> image(Image imgSrc, {PosAlign align = PosAlign.center}) {
+  /// [image] is an instance of class from [Image library](https://pub.dev/packages/image)
+  List<int> image(Image imgSrc,
+      {PosAlign align = PosAlign.center,
+      bool highDensityHorizontal = true,
+      bool highDensityVertical = true}) {
     List<int> bytes = [];
     // Image alignment
-    bytes += setStyles(PosStyles().copyWith(align: align));
+    bytes += setStyles(const PosStyles().copyWith(align: align));
 
     final Image image = Image.from(imgSrc); // make a copy
-    const bool highDensityHorizontal = true;
-    const bool highDensityVertical = true;
 
     invert(image);
     flip(image, direction: FlipDirection.horizontal);
     final Image imageRotated = copyRotate(image, angle: 270);
 
-    const int lineHeight = highDensityVertical ? 3 : 1;
+    int lineHeight = highDensityVertical ? 3 : 1;
     final List<List<int>> blobs = _toColumnFormat(imageRotated, lineHeight * 8);
 
     // Compress according to line density
@@ -593,7 +593,7 @@ class Generator {
     }
 
     final int heightPx = imageRotated.height;
-    const int densityByte =
+    int densityByte =
         (highDensityHorizontal ? 1 : 0) + (highDensityVertical ? 32 : 0);
 
     final List<int> header = List.from(cBitImg.codeUnits);
@@ -614,7 +614,7 @@ class Generator {
 
   /// Print an image using (GS v 0) obsolete command
   ///
-  /// [image] is an instanse of class from [Image library](https://pub.dev/packages/image)
+  /// [image] is an instance of class from [Image library](https://pub.dev/packages/image)
   List<int> imageRaster(
     Image image, {
     PosAlign align = PosAlign.center,
