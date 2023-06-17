@@ -18,13 +18,13 @@ class Generator {
 
   // Ticket config
   final PaperSize _paperSize;
-  CapabilityProfile _profile;
+  final CapabilityProfile _profile;
   int? _maxCharsPerLine;
   // Global styles
   String? _codeTable;
   PosFontType? _font;
   // Current styles
-  PosStyles _styles = PosStyles();
+  PosStyles _styles = const PosStyles();
   int spaceBetweenRows;
 
   // ************************ Internal helpers ************************
@@ -225,7 +225,7 @@ class Generator {
   List<int> reset() {
     List<int> bytes = [];
     bytes += cInit.codeUnits;
-    _styles = PosStyles();
+    _styles = const PosStyles();
     bytes += setGlobalCodeTable(_codeTable);
     bytes += setGlobalFont(_font);
     return bytes;
@@ -624,7 +624,7 @@ class Generator {
   }) {
     List<int> bytes = [];
     // Image alignment
-    bytes += setStyles(PosStyles().copyWith(align: align));
+    bytes += setStyles(const PosStyles().copyWith(align: align));
 
     final int widthPx = image.width;
     final int heightPx = image.height;
@@ -676,7 +676,7 @@ class Generator {
   }) {
     List<int> bytes = [];
     // Set alignment
-    bytes += setStyles(PosStyles().copyWith(align: align));
+    bytes += setStyles(const PosStyles().copyWith(align: align));
 
     // Set text position
     bytes += cBarcodeSelectPos.codeUnits + [textPos.value];
@@ -711,12 +711,12 @@ class Generator {
   List<int> qrcode(
     String text, {
     PosAlign align = PosAlign.center,
-    QRSize size = QRSize.Size4,
+    QRSize size = QRSize.size4,
     QRCorrection cor = QRCorrection.L,
   }) {
     List<int> bytes = [];
     // Set alignment
-    bytes += setStyles(PosStyles().copyWith(align: align));
+    bytes += setStyles(const PosStyles().copyWith(align: align));
     QRCode qr = QRCode(text, size, cor);
     bytes += qr.bytes;
     return bytes;
