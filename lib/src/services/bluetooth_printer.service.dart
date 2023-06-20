@@ -1,11 +1,11 @@
 import 'dart:async';
 import 'dart:io';
 
-import 'package:bluetooth_thermal_printer/enums/print_result.type.dart';
-import 'package:bluetooth_thermal_printer/models/bluetooth_printer.model.dart';
 import 'package:flutter_bluetooth_basic/flutter_bluetooth_basic.dart';
 import 'package:rxdart/streams.dart';
 import 'package:rxdart/subjects.dart';
+
+import 'package:bluetooth_thermal_printer/bluetooth_thermal_printer.dart';
 
 class BluetoothPrinterService {
   final BluetoothManager _bluetoothManager = BluetoothManager.instance;

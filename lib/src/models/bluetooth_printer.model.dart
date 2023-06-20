@@ -1,4 +1,4 @@
-import 'package:flutter_bluetooth_basic/flutter_bluetooth_basic.dart';
+import 'package:bluetooth_thermal_printer/bluetooth_thermal_printer.dart';
 
 class BluetoothPrinter {
   BluetoothPrinter(this.device);

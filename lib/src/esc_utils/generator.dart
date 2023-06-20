@@ -4,14 +4,8 @@ import 'package:flutter/services.dart';
 import 'package:hex/hex.dart';
 import 'package:image/image.dart';
 import 'package:gbk_codec/gbk_codec.dart';
-import 'barcode.dart';
-import 'capability_profile.dart';
-import 'enums.dart';
-import 'commands.dart';
-import 'pos_column.dart';
-import 'pos_styles.dart';
-import 'qrcode.dart';
 import 'dart:typed_data';
+import 'package:bluetooth_thermal_printer/bluetooth_thermal_printer.dart';
 
 class Generator {
   Generator(this._paperSize, this._profile, {this.spaceBetweenRows = 5});
